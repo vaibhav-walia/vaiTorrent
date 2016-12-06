@@ -12,11 +12,15 @@ Latest version of NodeJs and NPM
 
 ### Installing
 
-
-1. Download/pull the source code
-2. Open settings.json and set the download directory
-3. npm install
-4. node vaiTorrent.js torrentFilePath             
+ * Download/pull the source code
+ * Open settings.json and set the download directory
+```javascript
+{
+    "downloadDir" : "./downloads/"
+}
+```
+* npm install
+* node vaiTorrent.js torrentFilePath             
 
 
 ```
