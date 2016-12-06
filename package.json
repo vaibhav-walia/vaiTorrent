@@ -1,0 +1,13 @@
+{
+  "name": "vaibhav-bittorent-client",
+  "version": "0.0.0",
+  "description": "A bittorent client in Node.js",
+  "main": "index.js",
+  "repository": "",
+  "author": "Vaibhav Walia <vaibhav.walia.m@gmail.com>",
+  "dependencies": {
+    "bencode": "^0.10.0",
+    "parse-torrent": "^5.8.1",
+    "request": "^2.79.0"
+  }
+}
