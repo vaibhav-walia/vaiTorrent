@@ -1,10 +1,38 @@
-vaiTorrent : A BitTorrent client implementation in Node.js, meant for educational purposes only.
-Supports HTTP Trackers and multifile torrents.
+# vaiTorrent
 
-Steps to run:
-1. Download/pull the source code 
-2. Open settings.json and set the download directory
-3. npm install
-4. node vaiTorrent.js <torrent file path> eg: node vaiTorrent.js 1.torrent
+A BitTorrent client implementation in Node.js, meant for educational purposes only.
 
-Feel free to contribute :) 
+## Getting Started
+
+
+
+### Prerequisites
+Latest version of NodeJs and NPM
+
+
+### Installing
+
+ * Download/pull the source code
+ * Open settings.json and set the download directory
+```javascript
+{
+    "downloadDir" : "./downloads/"
+}
+```
+* npm install
+* node vaiTorrent.js torrentFilePath             
+
+
+```
+node vaiTorrent.js 1.torrent
+```
+
+
+## Authors
+
+* **Vaibhav Walia** - [Github Profile](https://github.com/vaibhav-walia)
+
+
+## License
+
+Free software!!
