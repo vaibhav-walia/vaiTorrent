@@ -56,43 +56,6 @@ if (typeof(torrentFileName) !== "undefined") {
             //pieces[pieceNumber] = piece;
             savePieceToFile(pieceNumber, piece);
             remaining--;
-            // if (remaining == 0) {
-            //     //download complete, save file. 
-            //     //[TODO] save multiple file torrent
-            //     // pt.files.forEach(function(file) {
-            //     //     var filename = file.name;
-            //     //     for (var k = 0; k < filename.length; k++)
-            //     //         filename = filename.replace(" ", "_");
-            //     //     downloadedFilePath = settings.downloadDir + filename;
-            //     // });
-            //     var filename = pt.files[0].name;
-            //     for (var k = 0; k < filename.length; k++)
-            //         filename = filename.replace(" ", "_");
-            //     downloadedFilePath = settings.downloadDir + filename;
-            //     // var buf = Buffer.from(pieces);
-            //     // logStore.push("Expected file length:"+pt.files[0].length);
-            //     // logStore.push("Actual file length:"+buf.length);
-            //     pieces.forEach(function(p) {
-            //         fs.appendFileSync(downloadedFilePath, p, 'binary');
-            //     });
-
-            //     // var writeStream = fs.createWriteStream(downloadedFilePath, {
-            //     //     flags: 'w',
-            //     //     defaultEncoding: 'utf8',
-            //     //     fd: null,
-            //     //     mode: 0o666,
-            //     //     autoClose: true
-            //     // });
-            //     // piece.forEach(function(p) {
-            //     //     writeStream.write(p.toString());
-            //     // });
-            //     // fs.writeFile(downloadedFilePath, pieces, function(err) {
-            //     //     if (err) {
-            //     //         logStore.push(err);
-            //     //         return console.log(err);
-            //     //     }
-            //     // });
-            // }
         },
         isChokingMe: function(peerString) {
             return isChoking.indexOf(peerString) > -1 ? true : false;
