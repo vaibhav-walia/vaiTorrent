@@ -18,6 +18,7 @@ var isChoking = []; //peers choking me
 var beingChoked = []; //peers I am choking 
 var remaining; // = pt.pieces.length; //number of pieces remaining 
 var downloadedFilePath = null;
+var lengthOfBoundryPieceWrittenToFile = [];
 
 var args = process.argv.slice(2);
 var torrentFileName = args[0];
@@ -53,7 +54,7 @@ if (typeof(torrentFileName) !== "undefined") {
         },
         savePiece: function(pieceNumber, piece) {
             //pieces[pieceNumber] = piece;
-            savePieceToFile(pieceNumber,piece);
+            savePieceToFile(pieceNumber, piece);
             remaining--;
             // if (remaining == 0) {
             //     //download complete, save file. 
@@ -117,7 +118,9 @@ if (typeof(torrentFileName) !== "undefined") {
             return peerState[peerString].pieceQueue.isEmpty();
         }
     };
-    
+    for (var x = 0; x < pt.files.length; x++) {
+        lengthOfBoundryPieceWrittenToFile[x] = 0;
+    }
     httpTracker.getPeerList(torrent, function(peerList) {
         if (!peerList || !peerList.length) {
             console.push("No active peers found, exiting.");
@@ -171,32 +174,60 @@ function printPeerState() {
 function escapeFileName(filename) {
     for (var k = 0; k < filename.length; k++)
         filename = filename.replace(" ", "_");
-    return filename;    
+    return filename;
 }
 
 function savePieceToFile(pieceNumber, piece) {
     //calculate byte offset of this piece
+    var thisPieceLength = (pieceNumber == pt.pieces.length - 1) ? pt.lastPieceLength : pt.pieceLength;
     var byteOffset = pieceNumber * pt.pieceLength;
 
     //use this to find which file this piece belongs to
-    var fileIndex = 0;
     for (var fi = 0; fi < pt.files.length; fi++) {
-        if (byteOffset >= pt.files[fi].offset && byteOffset < (pt.files[fi].offset + pt.files[fi].length)) {
-            var fileByteOffset = byteOffset - pt.files[fi].offset;
-            //write to file
-            var filePath = settings.downloadDir + escapeFileName(pt.files[fi].name);
-            fs.open(filePath,'r+',function(err,fd){
-                if(err){
-                    var fileDesc = fs.openSync(filePath, 'w');
-                    fs.writeSync(fileDesc,piece,0,piece.length,fileByteOffset);
-                }
-                else{
-                    fs.writeSync(fd,piece,0,piece.length,fileByteOffset);
-                }
+        var fileLength = pt.files[fi].length;
+        var fileBegin = pt.files[fi].offset;
+        var fileEnd = fileBegin + fileLength;
+        if (byteOffset >= fileBegin && byteOffset < fileEnd) {
+            //belongs to this file[maybe partially]
+            //check if the entire piece can be saved to this file
+            if (byteOffset + thisPieceLength <= fileEnd) {
+                //entire piece can be saved to this file
+                var fileByteOffset = byteOffset - fileBegin + lengthOfBoundryPieceWrittenToFile[fi];
+                var filePath = settings.downloadDir + escapeFileName(pt.files[fi].name);
+                //write to file
+                writeToFileAtOffset(piece, filePath, fileByteOffset);
+            }
+            else{
+                //boundary piece, partition and save to both this and next file
+                //logStore.push("Boundry case occured");
+                var thisFileBufferSize = fileEnd-byteOffset;
+                var nextFileBufferSize = byteOffset+thisPieceLength-fileEnd;
+                var thisFileBuffer  = Buffer.alloc(thisFileBufferSize);
+                var nextFileBuffer = Buffer.alloc(nextFileBufferSize);
+                var thisFileEnd = thisFileBufferSize-1;
                 
-            });
-            
+                piece.copy(thisFileBuffer,0,0,thisFileEnd);
+                piece.copy(nextFileBuffer,0,thisFileEnd+1,piece.length);
+                
+                var thisFilePath = settings.downloadDir + escapeFileName(pt.files[fi].name);
+                // [fi+1] should never overflow as this case would never occur for the last file
+                var nextFilePath = settings.downloadDir + escapeFileName(pt.files[fi+1].name); 
+                writeToFileAtOffset(thisFileBuffer,thisFilePath,byteOffset - fileBegin);
+                writeToFileAtOffset(nextFileBuffer,nextFilePath,0);
+                
+                lengthOfBoundryPieceWrittenToFile[fi+1] = nextFileBufferSize;
+            }
         }
     }
+}
 
+function writeToFileAtOffset(piece, filePath, offset) {
+    try {
+        var fd = fs.openSync(filePath, 'r+');
+        fs.writeSync(fd, piece, 0, piece.length, offset);
+    }
+    catch (err) {
+        var fileDesc = fs.openSync(filePath, 'w');
+        fs.writeSync(fileDesc, piece, 0, piece.length, offset);
+    }
 }
