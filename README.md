@@ -39,6 +39,7 @@ Latest version of NodeJs and NPM
     
     ```
     Example:
+    $ cd src
     $ node vaiTorrent.js ./../testTorrents/2.torrent
     ```
 
