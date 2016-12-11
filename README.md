@@ -10,22 +10,37 @@ A BitTorrent client implementation in Node.js, meant for educational purposes on
 Latest version of NodeJs and NPM
 
 
-### Installing
+### Installing and Running 
 
  * Download/pull the source code
- * Open settings.json and set the download directory
+ 
+ ```
+ $ mkdir vaiTorrent
+ $ cd vaiTorrent
+ $ git init
+ $ git pull https://github.com/vaibhav-walia/vaiTorrent.git
+```
+
+* Install the client
+ 
+```
+ $ npm install
+```
+
+
+* Open settings.json and set the download directory
 ```javascript
 {
-    "downloadDir" : "./downloads/"
+    "downloadDir" : "./../Downloads/"
 }
 ```
-* npm install
-* node vaiTorrent.js torrentFilePath             
 
-
-```
-node vaiTorrent.js 1.torrent
-```
+* Download a torrent : ```node vaiTorrent.js <torrentFilePath>```
+    
+    ```
+    Example:
+    $ node vaiTorrent.js ./../testTorrents/2.torrent
+    ```
 
 
 ## Authors
