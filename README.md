@@ -23,17 +23,17 @@ Latest version of NodeJs and NPM
 
 * Install the client
  
-```
- $ npm install
-```
+    ```
+     $ npm install
+    ```
 
 
 * Open settings.json and set the download directory
-```javascript
-{
-    "downloadDir" : "./../Downloads/"
-}
-```
+    ```javascript
+    {
+        "downloadDir" : "./../Downloads/"
+    }
+    ```
 
 * Download a torrent : ```node vaiTorrent.js <torrentFilePath>```
     
