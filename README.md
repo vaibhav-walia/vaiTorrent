@@ -51,4 +51,4 @@ Latest version of NodeJs and NPM
 
 ## License
 
-Free software!!
+MIT
